@@ -1,207 +1,219 @@
 # TODO Написать 3 класса с документацией и аннотацией типов
+from abc import ABC
 
 
-class MusicalInstrument:
-    """
-    Абстрактный класс, описывающий музыкальный инструмент.
-    """
-
-    def __init__(self, name: str, num_strings: int, weight_kg: float):
+class Tree(ABC):
+    def __init__(self, height: float, age: int, tree_type: str):
         """
-        Инициализация музыкального инструмента.
+        Создание и подготовка к работе объекта "Дерево"
 
-        :param name: Название инструмента.
-        :param num_strings: Количество струн (0 для бесструнных инструментов).
-        :param weight_kg: Вес инструмента в килограммах.
+        :param height: Высота дерева в метрах
+        :param age: Возраст дерева в годах
+        :param tree_type: Вид дерева
 
-        :raises ValueError: Если параметры не удовлетворяют ограничениям.
-
-        >>> guitar = Guitar("Classical", 6, 2.5)  # Дочерний класс
-        >>> guitar.name
+        Примеры:
+        >>> tree = Tree(10.5, 25, "Дуб")  # инициализация экземпляра класса
         """
-        if not name.strip():
-            raise ValueError("Название инструмента не может быть пустым")
-        if num_strings < 0:
-            raise ValueError("Количество струн не может быть отрицательным")
-        if weight_kg <= 0:
-            raise ValueError("Вес инструмента должен быть положительным")
+        if not isinstance(height, (int, float)):
+            raise TypeError("Высота дерева должна быть типа int или float")
+        if height <= 0:
+            raise ValueError("Высота дерева должна быть положительным числом")
+        self.height = float(height)
 
-        self.name = name
-        self.num_strings = num_strings
-        self.weight_kg = weight_kg
-        self._is_tuned = False
+        if not isinstance(age, int):
+            raise TypeError("Возраст дерева должен быть типа int")
+        if age < 0:
+            raise ValueError("Возраст дерева не может быть отрицательным")
+        self.age = age
 
-    def play_note(self, note: str, duration: float) -> str:
+        if not isinstance(tree_type, str):
+            raise TypeError("Вид дерева должен быть типа str")
+        if not tree_type.strip():
+            raise ValueError("Вид дерева не может быть пустой строкой")
+        self.tree_type = tree_type.strip()
+
+    def grow(self, growth_per_year: float) -> float:
         """
-        Воспроизвести ноту на инструменте.
+        Рост дерева за год.
 
-        :param note: Название ноты (например, 'C', 'D#', 'F').
-        :param duration: Длительность ноты в секундах.
-        :return: Описание воспроизведенной ноты.
+        :param growth_per_year: Прирост высоты за год в метрах
+        :return: Новая высота дерева
 
-        >>> guitar = Guitar("Classical", 6, 2.5)  # Дочерний класс
-        >>> sound = guitar.play_note("A", 1.5)
-        >>> "A" in sound
+        Примеры:
+        >>> tree = Tree(10.5, 25, "Дуб")
+        >>> tree.grow(0.5)  # doctest: +SKIP
+        11.0
         """
-    def tune_instrument(self, reference_frequency: float = 440.0) -> bool:
+
+    def estimate_wood_volume(self) -> float:
         """
-        Настроить инструмент.
+        Оценка объема древесины в дереве.
 
-        :param reference_frequency: Эталонная частота для настройки (Гц).
-        :return: True, если инструмент успешно настроен, иначе False.
+        :return: Оценочный объем древесины в кубических метрах
 
-        >>> guitar = Guitar("Classical", 6, 2.5)  # Дочерний класс
-        >>> guitar.tune_instrument(440.0)
+        Примеры:
+        >>> tree = Tree(10.5, 25, "Дуб")
+        >>> tree.estimate_wood_volume()  # doctest: +SKIP
+        15.75
+        """
+
+    def is_fruit_tree(self) -> bool:
+        """
+        Проверка, является ли дерево плодовым.
+
+        :return: True если дерево плодовое, False в противном случае
+
+        Примеры:
+        >>> tree = Tree(10.5, 25, "Дуб")
+        >>> tree.is_fruit_tree()  # doctest: +SKIP
+        False
+        """
+
+
+class Smartphone(ABC):
+    def __init__(self, brand: str, battery_capacity: int, storage_gb: int):
+        """
+        Создание и подготовка к работе объекта "Смартфон"
+
+        :param brand: Бренд смартфона
+        :param battery_capacity: Емкость аккумулятора в мАч
+        :param storage_gb: Объем встроенной памяти в ГБ
+
+        Примеры:
+        >>> phone = Smartphone("Apple", 4000, 128)  # инициализация экземпляра класса
+        """
+        if not isinstance(brand, str):
+            raise TypeError("Бренд должен быть типа str")
+        if not brand.strip():
+            raise ValueError("Бренд не может быть пустой строкой")
+        self.brand = brand.strip()
+
+        if not isinstance(battery_capacity, int):
+            raise TypeError("Емкость аккумулятора должна быть типа int")
+        if battery_capacity <= 0:
+            raise ValueError("Емкость аккумулятора должна быть положительным числом")
+        self.battery_capacity = battery_capacity
+
+        if not isinstance(storage_gb, int):
+            raise TypeError("Объем памяти должен быть типа int")
+        if storage_gb <= 0:
+            raise ValueError("Объем памяти должен быть положительным числом")
+        self.storage_gb = storage_gb
+
+    def make_call(self, phone_number: str, duration_minutes: int) -> bool:
+        """
+        Совершение телефонного звонка.
+
+        :param phone_number: Номер телефона для звонка
+        :param duration_minutes: Продолжительность звонка в минутах
+        :return: True если звонок успешно совершен, False в противном случае
+
+        Примеры:
+        >>> phone = Smartphone("Apple", 4000, 128)
+        >>> phone.make_call("+79001234567", 10)  # doctest: +SKIP
         True
-        >>> guitar._is_tuned
         """
 
-    def get_available_notes(self) -> List[str]:
+    def check_battery_level(self) -> float:
         """
-        Получить список доступных нот для инструмента.
+        Проверка уровня заряда батареи.
 
-        :return: Список названий нот.
+        :return: Уровень заряда в процентах (от 0 до 100)
 
-        >>> guitar = Guitar("Classical", 6, 2.5)  # Дочерний класс
-        >>> notes = guitar.get_available_notes()
-        >>> len(notes) > 0
+        Примеры:
+        >>> phone = Smartphone("Apple", 4000, 128)
+        >>> phone.check_battery_level()  # doctest: +SKIP
+        85.5
+        """
+
+    def install_app(self, app_name: str, app_size_gb: float) -> bool:
+        """
+        Установка приложения на смартфон.
+
+        :param app_name: Название приложения
+        :param app_size_gb: Размер приложения в ГБ
+        :return: True если установка успешна, False в противном случае
+
+        Примеры:
+        >>> phone = Smartphone("Apple", 4000, 128)
+        >>> phone.install_app("Telegram", 0.5)  # doctest: +SKIP
         True
         """
 
 
-class SocialNetwork:
-    """
-    Абстрактный класс, описывающий социальную сеть.
-    """
-
-    def __init__(self, name: str, max_friends: int, is_public: bool):
+class BankAccount(ABC):
+    def __init__(self, account_number: str, owner_name: str, initial_balance: float = 0.0):
         """
-        Инициализация социальной сети.
+        Создание и подготовка к работе объекта "Банковский счет"
 
-        :param name: Название социальной сети.
-        :param max_friends: Максимальное количество друзей/подписчиков.
-        :param is_public: Публичная ли сеть (True) или закрытая (False).
+        :param account_number: Номер счета
+        :param owner_name: Имя владельца счета
+        :param initial_balance: Начальный баланс счета
 
-        :raises ValueError: Если параметры не удовлетворяют ограничениям.
-
-        >>> network = SocialNetworkImpl("MyNetwork", 5000, True)  # Дочерний класс
-        >>> network.name
+        Примеры:
+        >>> account = BankAccount("40817810099910004312", "Иванов Иван Иванович", 1000.0)
         """
-        if not name.strip():
-            raise ValueError("Название социальной сети не может быть пустым")
-        if max_friends < 0:
-            raise ValueError("Максимальное количество друзей не может быть отрицательным")
+        if not isinstance(account_number, str):
+            raise TypeError("Номер счета должен быть типа str")
+        if len(account_number) < 5:
+            raise ValueError("Номер счета должен содержать минимум 5 символов")
+        self.account_number = account_number
 
-        self.name = name
-        self.max_friends = max_friends
-        self.is_public = is_public
-        self._users_count = 0
+        if not isinstance(owner_name, str):
+            raise TypeError("Имя владельца должно быть типа str")
+        if not owner_name.strip():
+            raise ValueError("Имя владельца не может быть пустой строкой")
+        self.owner_name = owner_name.strip()
 
-    def add_friend(self, user_id: str, friend_id: str) -> bool:
+        if not isinstance(initial_balance, (int, float)):
+            raise TypeError("Начальный баланс должен быть типа int или float")
+        if initial_balance < 0:
+            raise ValueError("Начальный баланс не может быть отрицательным")
+        self.balance = float(initial_balance)
+
+    def deposit(self, amount: float) -> float:
         """
-        Добавить друга/подписчика.
+        Внесение денег на счет.
 
-        :param user_id: Идентификатор пользователя, который добавляет друга.
-        :param friend_id: Идентификатор друга для добавления.
-        :return: True, если друг успешно добавлен, иначе False.
+        :param amount: Сумма для внесения
+        :return: Новый баланс счета
 
-        >>> network = SocialNetworkImpl("MyNetwork", 5000, True)  # Дочерний класс
-        >>> network.add_friend("user123", "friend456")
-        """
-
-    def create_post(self, user_id: str, content: str, privacy: str) -> str:
-        """
-        Создать новый пост.
-
-        :param user_id: Идентификатор пользователя, создающего пост.
-        :param content: Текст поста.
-        :param privacy: Уровень приватности ('public', 'friends', 'private').
-        :return: Идентификатор созданного поста.
-
-        >>> network = SocialNetworkImpl("MyNetwork", 5000, True)  # Дочерний класс
-        >>> post_id = network.create_post("user123", "Hello world!", "public")
-        >>> len(post_id) > 0
+        Примеры:
+        >>> account = BankAccount("40817810099910004312", "Иванов Иван", 1000.0)
+        >>> account.deposit(500.0)  # doctest: +SKIP
+        1500.0
         """
 
-    def get_feed(self, user_id: str, limit: int = 10) -> List[str]:
+    def withdraw(self, amount: float) -> float:
         """
-        Получить ленту новостей пользователя.
+        Снятие денег со счета.
 
-        :param user_id: Идентификатор пользователя.
-        :param limit: Максимальное количество постов в ленте.
-        :return: Список идентификаторов постов.
+        :param amount: Сумма для снятия
+        :return: Новый баланс счета
 
-        >>> network = SocialNetworkImpl("MyNetwork", 5000, True)  # Дочерний класс
-        >>> feed = network.get_feed("user123", 5)
-        >>> isinstance(feed, list)
+        Примеры:
+        >>> account = BankAccount("40817810099910004312", "Иванов Иван", 1000.0)
+        >>> account.withdraw(300.0)  # doctest: +SKIP
+        700.0
         """
-
-
-class StorageDevice:
-    """
-    Абстрактный класс, описывающий устройство хранения данных.
-    """
-
-    def __init__(self, capacity_gb: float, read_speed_mbs: float, write_speed_mbs: float):
+    def transfer(self, target_account: 'BankAccount', amount: float) -> bool:
         """
-        Инициализация устройства хранения данных.
+        Перевод денег на другой счет.
 
-        :param capacity_gb: Объем памяти в гигабайтах. Должен быть положительным числом.
-        :param read_speed_mbs: Скорость чтения в МБ/с. Должна быть неотрицательной.
-        :param write_speed_mbs: Скорость записи в МБ/с. Должна быть неотрицательной.
+        :param target_account: Целевой счет для перевода
+        :param amount: Сумма перевода
+        :return: True если перевод успешен, False в противном случае
 
-        :raises ValueError: Если параметры не удовлетворяют ограничениям.
-
-        >>> hdd = HardDiskDrive(1000, 150, 120)  # Дочерний класс
-        >>> hdd.capacity_gb
-        """
-        if capacity_gb <= 0:
-            raise ValueError("Емкость устройства должна быть положительной")
-        if read_speed_mbs < 0 or write_speed_mbs < 0:
-            raise ValueError("Скорости чтения и записи не могут быть отрицательными")
-
-        self.capacity_gb = capacity_gb
-        self.read_speed_mbs = read_speed_mbs
-        self.write_speed_mbs = write_speed_mbs
-        self._used_space_gb = 0.0
-
-    def store_data(self, data_size_gb: float, filename: str) -> bool:
-        """
-        Записать данные на устройство.
-
-        :param data_size_gb: Размер данных в гигабайтах для записи.
-        :param filename: Имя файла для сохранения.
-        :return: True, если данные успешно записаны, иначе False.
-
-        >>> hdd = HardDiskDrive(500, 100, 80)  # Дочерний класс
-        >>> hdd.store_data(50, "backup.zip")
-        """
-
-    def read_data(self, filename: str) -> Optional[bytes]:
-        """
-        Прочитать данные с устройства.
-
-        :param filename: Имя файла для чтения.
-        :return: Данные в виде байтов или None, если файл не найден.
-
-        >>> hdd = HardDiskDrive(500, 100, 80)  # Дочерний класс
-        >>> data = hdd.read_data("backup.zip")
-        >>> data is None or isinstance(data, bytes)
-        """
-
-    def format_device(self) -> None:
-        """
-        Отформатировать устройство (очистить все данные).
-
-        >>> hdd = HardDiskDrive(500, 100, 80)  # Дочерний класс
-        >>> hdd.format_device()
-        >>> hdd._used_space_gb == 0
+        Примеры:
+        >>> account1 = BankAccount("40817810099910004312", "Иванов Иван", 1000.0)
+        >>> account2 = BankAccount("40817810099910004313", "Петров Петр", 500.0)
+        >>> account1.transfer(account2, 200.0)  # doctest: +SKIP
         True
         """
 
 
 if __name__ == "__main__":
     import doctest
-    doctest.testmod()
+    doctest.testmod(verbose=True)
     # TODO работоспособность экземпляров класса проверить с помощью doctest
     pass
